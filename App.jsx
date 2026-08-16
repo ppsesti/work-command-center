@@ -3,6 +3,7 @@ import {
   Zap, CalendarDays, ListChecks, Clock, CheckCircle2, Plus, X, Play,
   Trash2, Pencil, ChevronRight, ChevronDown, AlertTriangle, Minus, Check, Flower2, Target,
 } from "lucide-react";
+import { createClient } from "@supabase/supabase-js";
 
 /* ---------------------------------------------------------
    CONFIG / CONSTANTS
