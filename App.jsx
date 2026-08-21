@@ -432,7 +432,14 @@ export default function App() {
     const days = new Date(y, m, 0).getDate();
     return Array.from({ length: days }, (_, i) => `${calendarMonth}-${String(i + 1).padStart(2, "0")}`);
   }, [calendarMonth]);
+const [calendarYear, calendarMonthNumber] = calendarMonth.split("-").map(Number);
+const firstDay = new Date(calendarYear, calendarMonthNumber - 1, 1);
+const startOffset = (firstDay.getDay() + 6) % 7;
 
+const calendarCells = Array.from(
+  { length: startOffset + calendarDays.length },
+  (_, i) => i < startOffset ? null : calendarDays[i - startOffset]
+);
   const modalView = modal && (
     <Modal title={modal.type === "task" ? (modal.data ? "Edit kerjaan" : "Tambah kerjaan") : modal.type === "event" ? (modal.data ? "Edit agenda" : "Tambah agenda") : (modal.data ? "Edit project" : "Tambah project")} close={close}>
       {modal.type === "task" && <TaskForm data={modal.data} projects={projects} close={close} save={(d) => saveItem(saveTask, d)} />}
@@ -567,13 +574,36 @@ export default function App() {
           <Page title="Calendar Agenda" desc="Lihat agenda kerja dan deadline dalam satu tempat." add={() => setModal({ type: "event" })} addLabel="Tambah agenda">
             <div className="monthNav"><button className="icon" onClick={() => setCalendarMonth(shiftMonth(calendarMonth, -1))}><ChevronLeft /></button><strong>{monthLabel(calendarMonth)}</strong><button className="icon" onClick={() => setCalendarMonth(shiftMonth(calendarMonth, 1))}><ChevronRight /></button><button className="secondary small" onClick={() => setCalendarMonth(mKey(today()))}>Bulan ini</button></div>
             <div className="calendarList">
-              {calendarDays.map((day) => {
-                const dayTasks = tasks.filter((t) => t.deadline === day);
-                const dayEvents = events.filter((e) => e.date === day);
-                if (!dayTasks.length && !dayEvents.length) return null;
-                return <div className={`dayBlock ${day === today() ? "today" : ""}`} key={day}><div className="dayHead"><strong>{new Date(day + "T00:00:00").toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long" })}</strong>{day === today() && <span>Hari ini</span>}</div>{dayEvents.map((e) => <div className="calendarItem" key={e.id}><CalendarDays size={17} /><div><strong>{e.title}</strong><small>Agenda · {e.time || "Tanpa waktu"}</small></div><div className="rowActions"><button className="icon" onClick={() => setModal({ type: "event", data: e })}><Pencil size={14} /></button><button className="icon danger" onClick={() => delEvent(e.id)}><Trash2 size={14} /></button></div></div>)}{dayTasks.map((t) => <div className="calendarItem" key={t.id}><CheckSquare size={17} /><div><strong className={t.done ? "strike" : ""}>{t.title}</strong><small>Deadline · {t.time || "Tanpa waktu"} · {t.priority} · {t.difficulty}</small></div></div>)}</div>;
-              })}
-              {!calendarDays.some((day) => tasks.some((t) => t.deadline === day) || events.some((e) => e.date === day)) && <Empty text="Belum ada agenda atau deadline di bulan ini." />}
+              {calendarCells.map((day, i) => {
+  if (!day) return <div className="calendarCell empty" key={`empty-${i}`} />;
+
+  const dayTasks = tasks.filter((t) => t.deadline === day);
+  const dayEvents = events.filter((e) => e.date === day);
+  const isToday = day === today();
+
+  return (
+    <div
+      className={`calendarCell ${isToday ? "today" : ""}`}
+      key={day}
+    >
+      <div className="calendarDate">
+        {new Date(day + "T00:00:00").getDate()}
+      </div>
+
+      {dayTasks.map((t) => (
+        <div className="calendarTask" key={t.id}>
+          {t.title}
+        </div>
+      ))}
+
+      {dayEvents.map((e) => (
+        <div className="calendarEvent" key={e.id}>
+          {e.title}
+        </div>
+      ))}
+    </div>
+  );
+})}
             </div>
           </Page>
         )}
