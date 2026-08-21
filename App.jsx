@@ -489,15 +489,15 @@ export default function App() {
   .slice(0, 4)
   .map((t) => (
     <div className="event" key={t.id}>
-      <b>{deadlineStatus(t.deadline)}</b>
-      <div>
-        <strong>{t.title}</strong>
-        <small>
-          {dateText(t.deadline)}
-          {t.time ? ` · ${t.time}` : ""}
-        </small>
-      </div>
-    </div>
+  <div>
+    <b>{deadlineStatus(t.deadline)}</b>
+    <strong>{t.title}</strong>
+    <small>
+      {dateText(t.deadline)}
+      {t.time ? ` · ${t.time}` : ""}
+    </small>
+  </div>
+</div>
   ))}
 {tasks.filter((t) => !t.done).length === 0 && (
   <Empty text="Belum ada tugas yang perlu dikerjakan." />
