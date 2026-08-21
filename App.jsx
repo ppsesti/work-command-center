@@ -483,7 +483,8 @@ export default function App() {
                 {todayTasks.slice(0, 5).map((t) => <TaskRow key={t.id} task={t} toggle={toggleTask} edit={(x) => setModal({ type: "task", data: x })} del={delTask} />)}
                 {!todayTasks.length && <Empty text="Belum ada kerjaan untuk hari ini." />}
               </Card>
-            {Tasks.filter((t) => !t.done)
+            <Card title="Agenda Terdekat" Icon={CalendarDays} action="Lihat semua →" onAction={() => setTab("calendar")}>
+              {Tasks.filter((t) => !t.done)
   .sort((a, b) => new Date(a.deadline + "T00:00:00") - new Date(b.deadline + "T00:00:00"))
   .slice(0, 4)
   .map((t) => (
