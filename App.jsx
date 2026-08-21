@@ -462,7 +462,7 @@ export default function App() {
         {cloudError && <div className="cloudError"><span>{cloudError}</span><button onClick={() => setCloudError("")}>×</button></div>}
         <header>
           <div>
-            <h1>{tab === "home" ? "Good day, Esti" : nav.find((x) => x[0] === tab)?.[1]}</h1>
+            <h1>{tab === "home" ? "Semangat, Esti" : nav.find((x) => x[0] === tab)?.[1]}</h1>
             <p>Take care of today. Build for tomorrow. Keep moving forward.</p>
           </div>
           <div className="date"><CalendarDays size={18} /><b>{new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}</b></div>
