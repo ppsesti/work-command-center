@@ -256,6 +256,15 @@ function Progress({ value }) {
   return <div className="progress"><span style={{ width: `${Math.max(0, Math.min(100, Number(value) || 0))}%` }} /></div>;
 }
 
+function deadlineStatus(date) {
+  const todayDate = new Date(today() + "T00:00:00");
+  const deadlineDate = new Date(date + "T00:00:00");
+  const diff = Math.round((deadlineDate - todayDate) / 86400000);
+
+  if (diff < 0) return `TERLAMBAT ${Math.abs(diff)} HARI`;
+  if (diff === 0) return "HARI INI";
+  return `H-${diff}`;
+}
 function TaskRow({ task, toggle, edit, del }) {
   return (
     <div className={`taskRow ${task.done ? "done" : ""}`}>
@@ -265,7 +274,7 @@ function TaskRow({ task, toggle, edit, del }) {
       <div className="taskMain">
         <strong>{task.title}</strong>
         <div className="meta">
-          <span>{dateText(task.deadline)}{task.time ? ` · ${task.time}` : ""}</span>
+         <span>{dateText(task.deadline)}{task.time ? ` · ${task.time}` : ""} · {deadlineStatus(task.deadline)}</span>
           {task.project && <span>· {task.project}</span>}
         </div>
       </div>
