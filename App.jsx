@@ -490,8 +490,36 @@ export default function App() {
   .map((t) => (
     <div className="event" key={t.id}>
   <div>
-    <b>{deadlineStatus(t.deadline)}</b>
-    <strong>{t.title}</strong>
+   <span
+  style={{
+    display: "inline-block",
+    fontSize: "10px",
+    fontWeight: 700,
+    padding: "4px 8px",
+    borderRadius: "999px",
+    marginBottom: "5px",
+    background:
+      deadlineStatus(t.deadline).startsWith("TERLAMBAT")
+        ? "#FDE2E2"
+        : deadlineStatus(t.deadline) === "HARI INI"
+        ? "#FFF1D6"
+        : deadlineStatus(t.deadline) === "H-1"
+        ? "#FFE8B3"
+        : "#E3F2E8",
+    color:
+      deadlineStatus(t.deadline).startsWith("TERLAMBAT")
+        ? "#C62828"
+        : deadlineStatus(t.deadline) === "HARI INI"
+        ? "#B86B00"
+        : deadlineStatus(t.deadline) === "H-1"
+        ? "#A05A00"
+        : "#287A45"
+  }}
+>
+  {deadlineStatus(t.deadline)}
+</span>
+
+<strong>{t.title}</strong>
     <small>
       {dateText(t.deadline)}
       {t.time ? ` · ${t.time}` : ""}
