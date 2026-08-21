@@ -483,9 +483,24 @@ export default function App() {
                 {todayTasks.slice(0, 5).map((t) => <TaskRow key={t.id} task={t} toggle={toggleTask} edit={(x) => setModal({ type: "task", data: x })} del={delTask} />)}
                 {!todayTasks.length && <Empty text="Belum ada kerjaan untuk hari ini." />}
               </Card>
-              <Card title="Agenda Terdekat" Icon={CalendarDays} action="Lihat semua →" onAction={() => setTab("calendar")}>
-                {todayEvents.slice(0, 4).map((e) => <div className="event" key={e.id}><b>{e.time || "—"}</b><div><strong>{e.title}</strong><small>{dateText(e.date)}</small></div></div>)}
-                {!todayEvents.length && <Empty text="Belum ada agenda hari ini." />}
+            {Tasks.filter((t) => !t.done)
+  .sort((a, b) => new Date(a.deadline + "T00:00:00") - new Date(b.deadline + "T00:00:00"))
+  .slice(0, 4)
+  .map((t) => (
+    <div className="event" key={t.id}>
+      <b>{deadlineStatus(t.deadline)}</b>
+      <div>
+        <strong>{t.title}</strong>
+        <small>
+          {dateText(t.deadline)}
+          {t.time ? ` · ${t.time}` : ""}
+        </small>
+      </div>
+    </div>
+  ))}
+{Tasks.filter((t) => !t.done).length === 0 && (
+  <Empty text="Belum ada tugas yang perlu dikerjakan." />
+)}
               </Card>
               <Card title="Project Berjalan" Icon={FolderKanban} action="Lihat project →" onAction={() => setTab("projects")}>
                 {activeProjects.slice(0, 3).map((p) => <div className="projectMini" key={p.id}><div><strong>{p.name}</strong><span>{p.progress}%</span></div><Progress value={p.progress} /></div>)}
