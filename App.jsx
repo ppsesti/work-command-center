@@ -484,7 +484,7 @@ export default function App() {
                 {!todayTasks.length && <Empty text="Belum ada kerjaan untuk hari ini." />}
               </Card>
             <Card title="Agenda Terdekat" Icon={CalendarDays} action="Lihat semua →" onAction={() => setTab("calendar")}>
-              {Tasks.filter((t) => !t.done)
+              {tasks.filter((t) => !t.done)
   .sort((a, b) => new Date(a.deadline + "T00:00:00") - new Date(b.deadline + "T00:00:00"))
   .slice(0, 4)
   .map((t) => (
@@ -499,7 +499,7 @@ export default function App() {
       </div>
     </div>
   ))}
-{Tasks.filter((t) => !t.done).length === 0 && (
+{tasks.filter((t) => !t.done).length === 0 && (
   <Empty text="Belum ada tugas yang perlu dikerjakan." />
 )}
               </Card>
